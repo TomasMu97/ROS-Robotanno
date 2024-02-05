@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="(empty)"
+	BuildStamp="20240115-0853-Experimental"
+	Name="tomas-Z170-HD3P"
+	Generator="ctest-3.10.2"
+	CompilerName="/usr/bin/g++-11"
+	CompilerVersion="11.4.0"
+	OSName="Linux"
+	Hostname="tomas-Z170-HD3P"
+	OSRelease="5.4.0-150-generic"
+	OSVersion="#167~18.04.1-Ubuntu SMP Wed May 24 00:51:42 UTC 2023"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="94"
+	ProcessorCacheSize="8192"
+	NumberOfLogicalCPU="8"
+	NumberOfPhysicalCPU="4"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="15891"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="3700.01"
+	>
+	<Testing>
+		<StartDateTime>Jan 15 13:43 CET</StartDateTime>
+		<StartTestTime>1705322630</StartTestTime>
+		<TestList/>
+		<EndDateTime>Jan 15 13:43 CET</EndDateTime>
+		<EndTestTime>1705322630</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>

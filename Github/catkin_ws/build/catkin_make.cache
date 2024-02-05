@@ -1,0 +1,2 @@
+
+-DCATKIN_DEVEL_PREFIX=/home/tomas/probot_g602_ws/src/probot_g602/probot_g602_demo/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/tomas/probot_g602_ws/src/probot_g602/probot_g602_demo/catkin_ws/install -G Unix Makefiles

@@ -1,0 +1,1 @@
+/usr/bin/g++-11 -fPIC -g  -shared -Wl,-soname,libgtest.so -o libgtest.so CMakeFiles/gtest.dir/src/gtest-all.cc.o  -L/home/tomas/probot_g602_ws/src/probot_g602/probot_g602_demo/build/gtest/googlemock/gtest/src -Wl,-rpath,/home/tomas/probot_g602_ws/src/probot_g602/probot_g602_demo/build/gtest/googlemock/gtest/src -lpthread 
