@@ -1,0 +1,37 @@
+<launch>
+    <!-- you can write your own calibrate.launch, by including the ROS drivers for robot and tracking and choosing
+    your own namespace if you have multiple tracking devices or robots -->
+
+    <arg name="namespace_prefix" default="realsense_handeyecalibration" />
+    <arg name="eye_on_hand" default="true" />
+
+    <arg name="robot_base_frame" value="base_link" />
+    <arg name="robot_effector_frame" value="tool0" />
+    <arg name="tracking_base_frame" value="camera_color_frame" />
+    <arg name="tracking_marker_frame" value="camera_marker" />
+
+    <arg name="marker_size" doc="Size of the ArUco marker used, in meters" default="0.08" />
+    <arg name="marker_id" doc="The ID of the ArUco marker used" default="582"/>
+
+    <!-- start the Realsense435 -->
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch" />
+
+    <!-- start the robot -->
+    <include file="$(find probot_bringup)/launch/probot_anno_bringup.launch" />
+
+    <!-- start ArUco -->
+    <node name="aruco_tracker" pkg="aruco_ros" type="single">
+        <remap from="/camera_info" to="/camera/color/camera_info" />
+        <remap from="/image" to="/camera/color/image_raw" />
+        <param name="image_is_rectified" value="true"/>
+        <param name="marker_size"        value="$(arg marker_size)"/>
+        <param name="marker_id"          value="$(arg marker_id)"/>
+        <param name="reference_frame"    value="$(arg tracking_base_frame)"/>
+        <param name="camera_frame"       value="$(arg tracking_base_frame)"/>
+        <param name="marker_frame"       value="$(arg tracking_marker_frame)" />
+    </node>
+
+    <!-- start the Realsense435 -->
+    <include file="$(find handeye_simulation)/launch/publish.launch" />
+
+</launch>

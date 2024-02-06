@@ -86,11 +86,11 @@ main()
     mkdir -p catkin_ws/src
     cp  -r MQTT_bridge_src catkin_ws/src/MQTT_bridge_src 
     cp CMakeLists.txt catkin_ws/src/CMakeLists.txt     
-    cd catkin_ws
-    catkin_make
+    cd catkin_ws/src
+    catkin_init_workspace
 
     # Installing MQTT/JSON
-    cd src
+    #cd src
     git clone https://github.com/eclipse/mosquitto
     git clone https://github.com/nlohmann/json/
     cd mosquitto
