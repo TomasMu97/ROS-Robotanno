@@ -1,1 +1,0 @@
-/usr/bin/g++-11 -fPIC -g  -shared -Wl,-soname,libprobot_g602_demo.so -o devel/lib/libprobot_g602_demo.so CMakeFiles/probot_g602_demo.dir/src/moveit_fk_demo.cpp.o 
