@@ -3,9 +3,9 @@ This is the first attempt to run a ROS-driven Robotanno g602 using @adalbertocaj
 
 # Dependences and system requirements
 This code has been developed in Ubuntu 18.04.6 LTS. 
-    It is required to have installed:
+    ## It is required to have installed:
     - Curl
-    It is optional to have installed:
+    ## It is optional to have installed:
     - ROS melodic
     - Catkin
     - Rviz, gazebo, Moveit
