@@ -14,16 +14,16 @@ rospy
 
 # Specify the include directories
 include_directories(
-  ${catkin_INCLUDE_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}/json/include/"
+  ${catkin_INCLUDE_DIRS} "json/include/"
   # Add other include directories as needed
 )
 
 # Add executable target
-add_executable(MQTT-ROS_Bridge {CMAKE_CURRENT_SOURCE_DIR}/MQTT_bridge_src/simulated_server.cpp)
+add_executable(MQTT-ROS_Bridge MQTT_bridge_src/simulated_server.cpp)
 target_include_directories(MQTT-ROS_Bridge PUBLIC 
-"${CMAKE_CURRENT_SOURCE_DIR}/json/single_include/"
-"${CMAKE_CURRENT_SOURCE_DIR}/mosquitto/include/"
-"${CMAKE_CURRENT_SOURCE_DIR}/MQTT_bridge_src"
+"json/single_include/"
+"mosquitto/include/"
+"MQTT_bridge_src"
 )
 
 # Link ROS libraries
@@ -31,10 +31,10 @@ target_link_libraries(MQTT-ROS_Bridge ${catkin_LIBRARIES})
 
 # Link other libraries (e.g., Mosquitto, JSON)
 target_link_libraries(MQTT-ROS_Bridge 
-"{CMAKE_CURRENT_SOURCE_DIR}/lib/libmosquitto_static.a"
-"{CMAKE_CURRENT_SOURCE_DIR}/json/single_include/nlohmann/json.hpp"
-"{CMAKE_CURRENT_SOURCE_DIR}/mosquitto/include/mosquitto.h"
-"{CMAKE_CURRENT_SOURCE_DIR}/MQTT_bridge_src"
+"${CMAKE_CURRENT_SOURCE_DIR}/lib/libmosquitto_static.a"
+"${CMAKE_CURRENT_SOURCE_DIR}/json/single_include/nlohmann/json.hpp"
+"${CMAKE_CURRENT_SOURCE_DIR}/mosquitto/include/mosquitto.h"
+"${CMAKE_CURRENT_SOURCE_DIR}/MQTT_bridge_src"
 
 )
 

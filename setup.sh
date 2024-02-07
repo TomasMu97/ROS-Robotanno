@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
 #=================================================
-#	System Required: Ubuntu 16.04
-#	Description: Install ROS And PROBOT
-#	Version: 2.1.0
-#	Author: ps-micro
-#	Site: http://www.ps-micro.com/
+#	System Required: Ubuntu 18.04
+#	Description: Install ROS, Catkin And PROBOT
+#	Version: 1.0
+#	Author: tmunoz1
 #=================================================
 
 robot_name="g602"
@@ -24,20 +23,21 @@ Tip="${Green_font_prefix}[Warn]${Font_color_suffix}"
 OSVersion=$(lsb_release -r --short)
 OSDescription=$(lsb_release -d --short)
 
-check_system_version()
-{
+#Checks system version and sets compatible ROS version
+check_system_version(){
     if [[ "${OSVersion}" == "16.04" ]]; then
         ROS_Ver="kinetic"
     elif [[ "${OSVersion}" == "18.04" ]]; then
         ROS_Ver="melodic"
+    elif [[ "${OSVersion}" == "20.04" ]]; then
+        ROS_Ver="noetic"
     else
        echo -e "${Error} PROBOT don't support ${OSDescription} !" && exit 1
     fi
 }
 
-
-check_ros_version()
-{
+#Checks if there is already any version of ROS installed
+check_ros_version(){
 	echo -e "${Tip} The system version: ${OSDescription}" 
 	if [ -f "/usr/bin/rosversion" ]; then
 		ROSVER=`/usr/bin/rosversion -d`
@@ -46,12 +46,50 @@ check_ros_version()
 			return
 		fi 
 	fi
-	echo -e "${Error} ROS has not installed in this computer, please install ROS with 1." 
+	echo -e "${Error} ROS has not installed in this computer, please install ROS." 
 }
 
+#Install ROS
+install_ros(){
+    #Check if it is already installed        
+	if [ -f "/usr/bin/rosversion" ]; then
+		ROSVER=`/usr/bin/rosversion -d`
+		if [ $ROSVER ]; then
+			echo -e "${Tip} The ROS ${ROSVER} has been installed!" 
+			echo && stty erase ^? && read -p "Do you want to continue？ y/n：" choose
+			if [[ "${choose}" == "y" ]]; then
+				echo -e "${Info}Starting ROS install！" 
+			else
+				exit
+			fi
+		fi
+	fi
 
-install_probot_dependents()
-{
+    echo -e "${Green_font_prefix}Install ROS ...${Font_color_suffix}"
+
+    #Install ROS core packages
+    sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+    curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+    sudo apt update
+	sudo apt install ros-${ROS_Ver}-desktop-full
+
+    #Source environment
+    echo "source /opt/ros/${ROS_Ver}/setup.bash" >> ~/.bashrc
+	source /opt/ros/${ROS_Ver}/setup.bash
+    source ~/.bashrc
+
+    #Dependencies
+    sudo apt install python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential python-catkin-tools
+
+    #ROSDep
+	sudo rosdep init
+	rosdep update
+
+    echo -e "${Green_font_prefix}ROS has installed finished.${Font_color_suffix}"
+}
+
+#Install Moveit, industrial, gazebo and other packages
+install_probot_dependents(){
     echo -e "${Green_font_prefix}Install probot dependent packages ...${Font_color_suffix}"
 
     sudo apt-get -y install ros-${ROS_Ver}-moveit-*
@@ -71,15 +109,8 @@ install_probot_dependents()
     echo -e "${Green_font_prefix}Dependent packages have installed finished.${Font_color_suffix}"
 }
 
-
-main()
-{
-    echo -e "Robot environment Setup ${Red_font_prefix}[${default_version}]${Font_color_suffix}"
-
-    #Installing ROS packages
-    #check_system_version
-    #check_ros_version
-    #install_probot_dependents
+#Sets catkin workspace and copies files into it. After this, all is set.
+set_up_workspace(){
 
     #Installing catking workspace
     #cd ../../
@@ -103,7 +134,32 @@ main()
     ls -l lib
     mkdir ../../lib
     cp lib/libmosquitto_static.a ../../lib/libmosquitto_static.a
+}
 
+main()
+{
+    echo -e "Robot environment Setup ${Red_font_prefix}[${default_version}]${Font_color_suffix}"
+
+    #Installing ROS packages
+    check_system_version
+    check_ros_version
+
+    #Install ROS
+    echo && stty erase ^? && read -p "Install ROS? [y/n]：" choose
+    if [[ "${choose}" == "y" ]]; then
+        echo -e "${Info}Installing ROS！" 
+        install_ros
+        install_probot_dependents
+    fi
+
+    #Set up catkin workspace
+    echo && stty erase ^? && read -p "set up workspace? [y/n]：" choose
+    if [[ "${choose}" == "y" ]]; then
+        echo -e "${Info}Setting up workspace！" 
+        set_up_workspace
+    else
+        exit
+    fi
  
 }
 
