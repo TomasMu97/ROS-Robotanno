@@ -109,6 +109,35 @@ install_probot_dependents(){
     echo -e "${Green_font_prefix}Dependent packages have installed finished.${Font_color_suffix}"
 }
 
+install_probot(){
+    echo -e "${Green_font_prefix}Install probot packages ...${Font_color_suffix}"
+
+    if [ ! -d catkin_ws/src/probot_${robot_name} ]; then
+    
+        cp -R PROBOT-G602/src/probot_${robot_name} catkin_ws/src/probot_${robot_name}
+        
+        chmod +x catkin_ws/src/probot_${robot_name}/probot_${robot_name}_demo/scripts/*
+        chmod +x catkin_ws/src/probot_${robot_name}/probot_driver/bin/*
+        chmod +x catkin_ws/src/probot_${robot_name}/probot_driver/scripts/*
+    
+        cd catkin_ws
+        catkin_make
+
+        sed -e '/probot/d' ~/.bashrc > ~/.bashrc.tmp
+        mv -f ~/.bashrc.tmp ~/.bashrc
+	    echo "source catkin_ws/devel/setup.bash --extend" >> ~/.bashrc
+	    echo "export LD_LIBRARY_PATH=catkin_ws/src/probot_${robot_name}/probot_rviz_plugin/lib/moveIt:${LD_LIBRARY_PATH}" >> ~/.bashrc
+    
+	    source ~/.bashrc
+    
+
+    echo -e "${Green_font_prefix}Probot packages have been installed."
+    else
+        echo -e "${Red_font_prefix}The probot_${robot_name}_ws folder has existed, please delete and reinstall!${Font_color_suffix}"
+    fi
+    cd ..
+}
+
 #Sets catkin workspace and copies files into it. After this, all is set.
 set_up_workspace(){
 
@@ -119,6 +148,11 @@ set_up_workspace(){
     cp CMakeLists.txt catkin_ws/src/CMakeLists.txt     
     cd catkin_ws/src
     catkin_init_workspace
+    #cd ..
+    #chmod +x devel
+    #chmod +x build
+    #chmod +x src 
+    #cd src
 
     # Installing MQTT/JSON
     #cd src
@@ -134,6 +168,16 @@ set_up_workspace(){
     ls -l lib
     mkdir ../../lib
     cp lib/libmosquitto_static.a ../../lib/libmosquitto_static.a
+    cd ../../../..
+}
+
+delete_all(){
+    sudo apt-get remove ros-*
+    sudo apt-get purge '^ros-*'
+    sudo apt remove python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential python-catkin-tools
+    sudo apt-get autoremove
+    sudo rm -rf catkin_ws
+
 }
 
 main()
@@ -157,6 +201,13 @@ main()
     if [[ "${choose}" == "y" ]]; then
         echo -e "${Info}Setting up workspace！" 
         set_up_workspace
+        install_probot
+    fi
+
+    echo && stty erase ^? && read -p "Delete all ROS (DEBUG ONLY) ? [y/n]：" choose
+    if [[ "${choose}" == "y" ]]; then
+        echo -e "${Info}Hope you know what you're doing, pal！" 
+        delete_all
     else
         exit
     fi
