@@ -114,7 +114,7 @@ install_probot(){
 
     if [ ! -d catkin_ws/src/probot_${robot_name} ]; then
     
-        cp -R PROBOT-G602/src/probot_${robot_name} catkin_ws/src/probot_${robot_name}
+        cp -R PROBOT-G602/src catkin_ws/
         
         chmod +x catkin_ws/src/probot_${robot_name}/probot_${robot_name}_demo/scripts/*
         chmod +x catkin_ws/src/probot_${robot_name}/probot_driver/bin/*
@@ -131,9 +131,7 @@ install_probot(){
 	    source ~/.bashrc
     
 
-    echo -e "${Green_font_prefix}Probot packages have been installed."
-    else
-        echo -e "${Red_font_prefix}The probot_${robot_name}_ws folder has existed, please delete and reinstall!${Font_color_suffix}"
+    echo -e "Probot packages have been installed."
     fi
     cd ..
 }
@@ -144,15 +142,12 @@ set_up_workspace(){
     #Installing catking workspace
     #cd ../../
     mkdir -p catkin_ws/src
-    cp  -r MQTT_bridge_src catkin_ws/src/MQTT_bridge_src 
-    cp CMakeLists.txt catkin_ws/src/CMakeLists.txt     
-    cd catkin_ws/src
     catkin_init_workspace
-    #cd ..
-    #chmod +x devel
-    #chmod +x build
-    #chmod +x src 
-    #cd src
+    install_probot
+    sudo cp  -r MQTT_bridge_src catkin_ws/src/MQTT_bridge_src 
+    sudo cp CMakeLists.txt catkin_ws/src/CMakeLists.txt     
+    cd catkin_ws/src
+
 
     # Installing MQTT/JSON
     #cd src
@@ -201,8 +196,9 @@ main()
     if [[ "${choose}" == "y" ]]; then
         echo -e "${Info}Setting up workspace！" 
         set_up_workspace
-        install_probot
     fi
+
+    echo "Probot packages were installed in ${ROS_PACKAGE_PATH}"
 
     echo && stty erase ^? && read -p "Delete all ROS (DEBUG ONLY) ? [y/n]：" choose
     if [[ "${choose}" == "y" ]]; then
