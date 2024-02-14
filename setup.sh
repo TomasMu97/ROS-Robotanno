@@ -112,28 +112,31 @@ install_probot_dependents(){
 install_probot(){
     echo -e "${Green_font_prefix}Install probot packages ...${Font_color_suffix}"
 
-    if [ ! -d catkin_ws/src/probot_${robot_name} ]; then
-    
-        cp -R PROBOT-G602/src catkin_ws/
+    if [ ! -d ~/probot_${robot_name}_ws ]; then
+        mkdir ~/probot_${robot_name}_ws
+        mkdir ~/probot_${robot_name}_ws/src
+        #mkdir ~/probot_${robot_name}_ws/src/probot_${robot_name}
+        cp -R PROBOT-G602/src ~/probot_${robot_name}_ws
         
-        chmod +x catkin_ws/src/probot_${robot_name}/probot_${robot_name}_demo/scripts/*
-        chmod +x catkin_ws/src/probot_${robot_name}/probot_driver/bin/*
-        chmod +x catkin_ws/src/probot_${robot_name}/probot_driver/scripts/*
-    
-        cd catkin_ws
+        chmod +x ~/probot_${robot_name}_ws/src/probot_${robot_name}/probot_${robot_name}_demo/scripts/*
+        chmod +x ~/probot_${robot_name}_ws/src/probot_${robot_name}/probot_driver/bin/*
+        chmod +x ~/probot_${robot_name}_ws/src/probot_${robot_name}/probot_driver/scripts/*
+
+        cd ~/probot_${robot_name}_ws
         catkin_make
 
         sed -e '/probot/d' ~/.bashrc > ~/.bashrc.tmp
         mv -f ~/.bashrc.tmp ~/.bashrc
-	    echo "source catkin_ws/devel/setup.bash --extend" >> ~/.bashrc
-	    echo "export LD_LIBRARY_PATH=catkin_ws/src/probot_${robot_name}/probot_rviz_plugin/lib/moveIt:${LD_LIBRARY_PATH}" >> ~/.bashrc
-    
-	    source ~/.bashrc
-    
+	    echo "source ~/probot_${robot_name}_ws/devel/setup.bash --extend" >> ~/.bashrc
+	    echo "export LD_LIBRARY_PATH=~/probot_${robot_name}_ws/src/probot_${robot_name}/probot_rviz_plugin/lib/moveIt:${LD_LIBRARY_PATH}" >> ~/.bashrc
 
-    echo -e "Probot packages have been installed."
+	    source ~/.bashrc
+
+        echo -e "${Green_font_prefix}PROBOT has installed to $(pwd) Please have a happy journey!${Font_color_suffix}"
+    echo -e "${Green_font_prefix}Probot was installed."
+    else
+        echo -e "${Red_font_prefix}The probot_${robot_name}_ws folder has existed, please delete and reinstall!${Font_color_suffix}"
     fi
-    cd ..
 }
 
 #Sets catkin workspace and copies files into it. After this, all is set.
@@ -175,6 +178,7 @@ delete_all(){
     sudo apt remove python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential python-catkin-tools
     sudo apt-get autoremove
     sudo rm -rf catkin_ws
+    sudo rm -ŕf ~/probot_${robot_name}_ws
 
 }
 
@@ -195,15 +199,15 @@ main()
     fi
 
     #Set up catkin workspace
-    echo && stty erase ^? && read -p "set up workspace? [y/n]：" choose
+    echo && stty erase ^? && read -p "install probot_g602 packages? [y/n]：" choose
     if [[ "${choose}" == "y" ]]; then
-        echo -e "${Info}Setting up workspace！" 
-        set_up_workspace
+        echo -e "${Info}Installing the robot！" 
+        install_probot
     fi
 
     echo "Probot packages were installed in ${ROS_PACKAGE_PATH}"
 
-    echo && stty erase ^? && read -p "Delete all ROS (DEBUG ONLY) ? [y/n]：" choose
+    echo && stty erase ^? && read -p "Delete all ROS packages and robot? (DEBUG ONLY) [y/n]：" choose
     if [[ "${choose}" == "y" ]]; then
         echo -e "${Info}Hope you know what you're doing, pal！" 
         delete_all
