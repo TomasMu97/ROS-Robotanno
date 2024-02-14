@@ -163,6 +163,10 @@ set_up_workspace(){
     ls -l lib
     mkdir ../../lib
     cp lib/libmosquitto_static.a ../../lib/libmosquitto_static.a
+
+    #lets make our executable
+    cd ../../..
+    catkin_make
 }
 
 delete_all(){
