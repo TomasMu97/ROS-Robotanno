@@ -143,7 +143,7 @@ set_up_workspace(){
     #cd ../../
     mkdir -p catkin_ws/src
     catkin_init_workspace
-    install_probot
+    #install_probot
     sudo cp  -r MQTT_bridge_src catkin_ws/src/MQTT_bridge_src 
     sudo cp CMakeLists.txt catkin_ws/src/CMakeLists.txt     
     cd catkin_ws/src
@@ -163,7 +163,6 @@ set_up_workspace(){
     ls -l lib
     mkdir ../../lib
     cp lib/libmosquitto_static.a ../../lib/libmosquitto_static.a
-    cd ../../../..
 }
 
 delete_all(){
